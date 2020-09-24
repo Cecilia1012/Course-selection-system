@@ -1,0 +1,35 @@
+<%@ page import="MySQL.Connect" %>
+<%@ page import="java.sql.*" %> 
+<%@page import="Class.Student"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>课程管理平台</title>
+</head>
+<body>
+	<div class="header" id="head">
+		<div class="back">
+			<img id="return" src="image/return-dark.png" onclick="back()" />
+		</div>
+		<div class="title">我的课程</div>
+	</div>
+	<%
+	//获取学生学号
+	Student student = (Student)session.getAttribute("student");
+	String StuID="";
+	if(student != null)
+	{
+		StuID=student.getStuID();
+		Connection conn = Connect
+	}
+	%>
+	<script type="text/javascript">
+		function back() {
+			window.location.href="index.jsp";
+		}
+	</script>
+</body>
+</html>

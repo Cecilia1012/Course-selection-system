@@ -1,0 +1,134 @@
+<%@ page import="MySQL.Connect" %>
+<%@ page import="java.sql.*" %> 
+<%@page import="Class.Student"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>课程管理平台</title>
+<style type="text/css">
+	#head {
+	   height: 150px;
+	   width: 100%;
+	   background-color: #66CCCC;
+	   text-align: center;
+	   position: relative;
+	}
+	.title {
+	   font-family: "宋体";
+	   color: #FFFFFF;
+	   position: absolute;
+	   top: 45%;
+	   left: 50%;
+	   transform: translate(-50%, -50%);  /* 使用css3的transform来实现 */
+	   font-size: 6vw;
+	   height: 40px;
+	   width: 40%;
+	}
+	.back{
+	   top: 33%;
+	   left: 4%;
+	   width: 6%;
+	   height: 38%;
+	   position: absolute;
+	}
+	#return{
+		width: 100%;
+		height: 100%;
+	}
+	.part{
+		width: 80%;
+		margin-left: 10%;
+		border:1px solid #66cccc;
+		margin-top: 2%;
+		box-shadow: 10px 10px 5px #888888;
+	}
+	#stu-title,#stu-view{
+		margin-left:3%;
+		margin-right:3%;
+		border-bottom:2px solid #ee7700;
+		padding-bottom:24px;
+		padding-top:20px;
+		font-size:36px;
+		font-family: "宋体";
+		letter-spacing:3px;
+		position:relative;
+		top:10px;
+		color:#4E9ED3;
+		font-weight:bold;
+	}
+	#stu-view{
+		font-size: 30px;
+	}
+	#stu-title{
+		font-size: 36px;
+	}
+	#stu-info{
+		color:black;
+		font-weight:normal;
+	}
+</style>
+</head>
+<body>
+	<div class="header" id="head">
+		<div class="back">
+			<img id="return" src="image/return-dark.png" onclick="back()" />
+		</div>
+		<div class="title">我的课程</div>
+	</div>
+	<%
+	//获取学生学号
+	Student student = (Student)session.getAttribute("student");
+	String StuID="";
+	if(student != null)
+	{
+		StuID=student.getStuID();
+		Connection conn = Connect.getConnection();
+		String sql="select CourseClassID from TB_SelectCourse where StuID='"+StuID+"'";
+		try
+		{
+			PreparedStatement pst = conn.prepareStatement(sql);
+			ResultSet rs = pst.executeQuery();
+			while(rs.next())
+			{
+				String CourseClassID=rs.getString("CourseClassID");
+				String sql2="select TC.CourseID,CourseName,CourseGrade,TeacherName,Place,Time from TB_Course TC,TB_Teacher TT,TB_CourseClass TCC ";
+				sql2=sql2+"where TCC.CourseClassID='"+CourseClassID+"' and TCC.CourseID=TC.CourseID and TCC.TeacherID=TT.TeacherID";
+				PreparedStatement pst2=conn.prepareStatement(sql2);
+				ResultSet rs2=pst2.executeQuery();
+				while(rs2.next())
+				{
+					String CourseID = rs2.getString("CourseID");
+					String CourseName=rs2.getString("CourseName");
+					Integer CourseGrade=rs2.getInt("CourseGrade");
+					String TeacherName=rs2.getString("TeacherName");
+					String Place=rs2.getString("Place");
+					String Time=rs2.getString("Time");
+		%>
+					<div class="part">
+						<p id="stu-title"><%= CourseName %><span id="stu-info">（学分：<%= CourseGrade %>）</span></p>
+						<p id="stu-view">课程代码：<span id="stu-info"><%= CourseID %></span></p>
+						<p id="stu-view">任课教师：<span id="stu-info"><%= TeacherName %></span></p>
+						<p id="stu-view">上课时间：<span id="stu-info"><%= Time %></span></p>
+						<p id="stu-view">上课地点：<span id="stu-info"><%= Place %></span></p>
+					</div>
+		<%
+				}
+			}
+		}
+		catch(SQLException e)
+		{
+			System.out.print(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	%>
+	<script type="text/javascript">
+		function back() {
+			window.location.href="index.jsp";
+		}
+	</script>
+</body>
+</html>

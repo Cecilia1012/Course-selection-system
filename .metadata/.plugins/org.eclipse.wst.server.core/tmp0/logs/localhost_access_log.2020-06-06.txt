@@ -1,0 +1,4 @@
+127.0.0.1 - - [06/Jun/2020:17:59:16 +0800] "GET / HTTP/1.1" 404 1074
+0:0:0:0:0:0:0:1 - - [06/Jun/2020:17:59:18 +0800] "GET /SelectClass/personIn.jsp HTTP/1.1" 200 809
+0:0:0:0:0:0:0:1 - - [06/Jun/2020:18:01:47 +0800] "GET /SelectClass/personIn.jsp HTTP/1.1" 200 1388
+0:0:0:0:0:0:0:1 - - [06/Jun/2020:18:02:42 +0800] "GET /SelectClass/personIn.jsp HTTP/1.1" 200 1394

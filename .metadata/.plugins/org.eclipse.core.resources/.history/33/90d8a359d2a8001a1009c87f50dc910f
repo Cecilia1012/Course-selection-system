@@ -1,0 +1,132 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+    pageEncoding="utf-8" import="Class.Student"%>
+<%@ page import="MySQL.Connect" %>
+<%@ page import="java.sql.*" %> 
+ 
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;" charset="UTF-8">
+<title>个人信息</title>
+<style>
+	#head {
+	   height: 150px;
+	   width: 100%;
+	   background-color: #66CCCC;
+	   text-align: center;
+	   position: relative;
+	}
+	.title {
+	   font-family: "宋体";
+	   color: #FFFFFF;
+	   position: absolute;
+	   top: 45%;
+	   left: 50%;
+	   transform: translate(-50%, -50%);  /* 使用css3的transform来实现 */
+	   font-size: 6vw;
+	   height: 40px;
+	   width: 40%;
+	}
+	.back{
+	   top: 33%;
+	   left: 4%;
+	   width: 6%;
+	   height: 38%;
+	   position: absolute;
+	}
+	.nav-back{
+		background:#2292DD;
+		padding:16px;
+		
+	}
+	.a-back{
+		text-decoration:none;
+		color:white;
+		font-size:34px;
+		letter-spacing:6px;
+	}
+	#stu-view{
+		margin-left:3%;
+		margin-right:3%;
+		border-bottom:2px solid #ee7700;
+		padding-bottom:24px;
+		padding-top:20px;
+		font-size:36px;
+		font-family: "宋体";
+		letter-spacing:3px;
+		position:relative;
+		top:10px;
+		color:#4E9ED3;
+		font-weight:bold;
+	}
+	#stu-info{
+		color:black;
+		font-weight:normal;
+	}
+	#editpwd{
+		float:right; 
+		position:relative; 
+		left:-4%;
+		width:4%;
+	}
+
+</style>
+</head>
+<body>
+	<div class="header" id="head">
+		<div class="back">
+      		<img id="return" style="width: 100%; height: 100%;" src="image/return-dark.png" onclick="window.location.href='index.jsp'"/>
+   		</div>
+  		<div class="title">教务管理系统</div>
+	</div>
+		<%
+		//获取学生信息
+		Student student = (Student)session.getAttribute("student");
+		String StuID = "";
+		String StuName = ""; 
+		String Sex = "";
+		String DeptName = "";
+		String ClassName = "";
+	 	if(student != null){
+	 		StuName = student.getStuName();
+		    StuID = student.getStuID();
+		    Sex = student.getSex();
+     		%>
+					
+			<p id="stu-view">学号：<span id="stu-info"><%=StuID %></span></p>
+			<p id="stu-view">姓名：<span id="stu-info"><%=StuName %></span></p>
+			<% 
+			if(Sex.equals("M")){
+				Sex = "男";
+			}
+			else{
+				Sex = "女";
+			}
+			%>
+			<p id="stu-view">性别：<span id="stu-info"><%=Sex %></span></p>
+			<%
+			Connection conn = Connect.getConnection();
+			String sql = "select * from tb_student,tb_dept, tb_class where StuID = '" + StuID + "' and tb_student.DeptID=tb_dept.DeptID and tb_student.ClassID=tb_class.ClassID";
+			try { 
+				PreparedStatement pst = conn.prepareStatement(sql);
+				ResultSet rs = pst.executeQuery();
+				while (rs.next()) {
+					DeptName = rs.getString("DeptName");
+					ClassName = rs.getString("ClassName");
+				}
+				rs.close();
+				pst.close();
+			} catch (SQLException e) {
+				System.out.println("数据库出现异常");
+				e.printStackTrace();
+			}
+			%>
+			<p id="stu-view">所属学院：<span id="stu-info"><%=DeptName %></span></p>
+			<p id="stu-view">所属班级：<span id="stu-info"><%=ClassName %></span></p>
+			<p id="stu-view">密码设置<img id="editpwd" src="image/editpwd.png" onclick="window.location.href='editPwd.jsp'"/></p>
+			<%
+     	}	
+	%>
+
+</body>
+</html>
